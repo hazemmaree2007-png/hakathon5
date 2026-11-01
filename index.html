@@ -1,0 +1,1895 @@
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080e1c">
+<title>GovAI Enterprise | UAE Hackathon</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#080e1c;
+  --panel:#111b30;
+  --panel2:#17243d;
+  --border:#273651;
+  --text:#eef4ff;
+  --muted:#9badc8;
+  --blue:#458aff;
+  --green:#36d6a1;
+  --purple:#ad83ff;
+  --red:#ff7186;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Cairo,Inter,sans-serif;
+}
+html[lang=en] body{font-family:Inter,Cairo,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:3px;
+}
+a{color:#85b5ff}
+::selection{background:#2756a2;color:white}
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:#344866;border-radius:10px}
+.hidden{display:none!important}
+
+.app{display:flex;min-height:100vh}
+.sidebar{
+  width:275px;
+  position:fixed;
+  inset-block:0;
+  inset-inline-start:0;
+  background:#0e1729;
+  border-inline-end:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  z-index:50;
+  transition:transform .3s;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:23px 18px;
+  border-bottom:1px solid var(--border);
+}
+.brand-icon{
+  width:50px;height:50px;
+  display:grid;place-items:center;
+  border-radius:16px;
+  background:linear-gradient(135deg,#2364eb,#874bdf);
+  box-shadow:0 8px 30px #2563eb35;
+  font-size:23px;
+}
+.brand h1{font-size:19px;font-weight:900;line-height:1.2}
+.brand small{font-size:10px;color:var(--muted)}
+.nav{padding:17px 10px;overflow-y:auto;flex:1}
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  color:#adbed9;
+  padding:14px;
+  text-align:start;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:5px;
+  transition:.2s;
+}
+.nav-btn i{width:21px;text-align:center;font-size:16px}
+.nav-btn:hover{background:#1b2c48;color:white}
+.nav-btn.active{
+  background:linear-gradient(90deg,#183b79,#17253d);
+  color:#8fbdff;
+  box-shadow:inset 3px 0 #448aff;
+}
+.sidebar-footer{padding:15px;border-top:1px solid var(--border)}
+.hackathon{
+  background:#152440;
+  border:1px solid #284778;
+  padding:14px;border-radius:13px;
+  font-size:12px;
+}
+.hackathon strong{color:#8dbbff}
+.hackathon p{color:var(--muted);font-size:11px;margin-top:5px}
+
+.main{
+  margin-inline-start:275px;
+  width:calc(100% - 275px);
+  min-width:0;
+}
+.topbar{
+  min-height:85px;
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:#0c1528ed;
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  padding:16px 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.topbar h2{font-size:20px;font-weight:900}
+.topbar p{font-size:11px;color:var(--muted);margin-top:3px}
+.actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.status{
+  color:var(--green);
+  background:#10372e;
+  border:1px solid #1d5b49;
+  padding:9px 12px;
+  border-radius:20px;
+  font-size:11px;
+}
+.btn{
+  background:#1b2a43;
+  color:white;
+  border:1px solid #344867;
+  padding:10px 15px;
+  border-radius:11px;
+  font-size:12px;
+  font-weight:800;
+  transition:.2s;
+}
+.btn:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.btn-primary{background:#2563eb;border-color:#397aff}
+.btn-purple{background:#743ed5;border-color:#9663f0}
+.btn-green{background:#087b60;border-color:#1ca981}
+.btn-danger{background:#5c2739;border-color:#914156}
+.icon-btn{width:42px;height:42px;display:grid;place-items:center;padding:0}
+.menu-toggle{display:none}
+.content{padding:26px;max-width:1650px;margin:auto}
+.view{animation:appear .3s ease}
+@keyframes appear{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero{
+  background:
+    radial-gradient(circle at 85% 0%,#2563eb40,transparent 45%),
+    linear-gradient(125deg,#152b53,#111b31);
+  border:1px solid #345281;
+  border-radius:23px;
+  padding:29px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  margin-bottom:22px;
+  overflow:hidden;
+}
+.hero h3{font-size:25px;font-weight:900;margin:10px 0}
+.hero p{font-size:13px;color:#b8c9e5;max-width:700px}
+.hero-symbol{font-size:80px;color:#6199ff;opacity:.55}
+.eyebrow{
+  display:inline-block;
+  color:#9cc6ff;
+  background:#2563eb25;
+  border:1px solid #4474b94d;
+  padding:6px 11px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+}
+.grid-kpi{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+.panel{
+  background:linear-gradient(150deg,#142039,#101a2d);
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:21px;
+  min-width:0;
+}
+.kpi{position:relative;overflow:hidden}
+.kpi-icon{
+  width:39px;height:39px;
+  border-radius:12px;
+  background:#28539b50;
+  color:#79acff;
+  display:grid;place-items:center;
+  margin-bottom:14px;
+}
+.kpi h4{font-size:12px;color:var(--muted);font-weight:700}
+.kpi .number{font-size:31px;font-weight:900;margin:6px 0}
+.kpi p{font-size:11px;color:var(--muted)}
+.kpi:nth-child(2) .kpi-icon{color:var(--green);background:#0c775744}
+.kpi:nth-child(3) .kpi-icon{color:var(--purple);background:#7a4add44}
+.kpi:nth-child(4) .kpi-icon{color:#ffbf70;background:#a66b2844}
+.two-columns{
+  display:grid;
+  grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);
+  gap:18px;
+  margin-bottom:20px;
+}
+.panel-title{
+  font-size:16px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.panel-sub{font-size:12px;color:var(--muted);margin-bottom:19px}
+.chart-wrap{height:290px;position:relative}
+.toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.input,.select,.textarea{
+  background:#0c172a;
+  border:1px solid #354966;
+  border-radius:11px;
+  padding:12px 13px;
+  color:white;
+  width:100%;
+  outline:none;
+  font-size:13px;
+}
+.input:focus,.select:focus,.textarea:focus{border-color:#4c94ff}
+.input::placeholder,.textarea::placeholder{color:#788aa6}
+.select option{background:#101b30}
+.search-box{max-width:320px}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:780px}
+th,td{padding:15px;text-align:start;border-bottom:1px solid #28364d;font-size:12px}
+th{color:#b7c7df;background:#1b2a43;font-weight:800}
+td{color:#d8e4f7}
+tr:hover td{background:#ffffff05}
+.tag{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+}
+.tag-green{background:#0c493a;color:#58edbd}
+.tag-amber{background:#533b18;color:#ffd18a}
+.tag-red{background:#552333;color:#ff91a2}
+.tag-blue{background:#1b3e72;color:#91c0ff}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field-label{font-size:12px;font-weight:800;display:block;margin-bottom:8px}
+.result{
+  background:#0a1425;
+  border:1px solid #30405c;
+  border-radius:13px;
+  padding:16px;
+  font-size:13px;
+  line-height:2;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.chat-shell{display:flex;flex-direction:column;height:630px}
+.chat-messages{
+  flex:1;overflow-y:auto;
+  padding:18px 4px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.message{display:flex;gap:10px;align-items:flex-start}
+.message.user{justify-content:flex-end}
+.avatar{
+  width:35px;height:35px;
+  flex-shrink:0;
+  border-radius:11px;
+  background:#275bd0;
+  display:grid;place-items:center;
+  font-size:12px;font-weight:900;
+}
+.bubble{
+  max-width:min(85%,700px);
+  background:#1b2a43;
+  border:1px solid #314562;
+  padding:13px 16px;
+  border-radius:15px;
+  font-size:13px;
+  line-height:1.9;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.user .bubble{background:#2459c9;border-color:#3879f2}
+.chat-form{display:flex;gap:10px;border-top:1px solid var(--border);padding-top:15px}
+.chat-form .input{flex:1}
+.quick-questions{display:flex;flex-wrap:wrap;gap:8px}
+.quick-questions button{
+  background:#1b3051;
+  border:1px solid #34517b;
+  color:#a9ceff;
+  border-radius:20px;
+  padding:7px 11px;
+  font-size:11px;
+}
+.policy-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+.policy-card{
+  border:1px solid #2e4160;
+  border-radius:15px;
+  background:#111f36;
+  padding:19px;
+}
+.policy-card h4{font-size:15px;font-weight:900;margin:10px 0}
+.policy-card p{font-size:12px;color:var(--muted);line-height:1.8}
+.policy-card a{display:inline-block;margin-top:12px;font-size:12px}
+.range{width:100%;accent-color:#598fff}
+.progress{
+  height:9px;
+  background:#26354e;
+  border-radius:20px;
+  overflow:hidden;
+}
+.progress>div{
+  height:100%;
+  background:linear-gradient(90deg,#337dff,#49d4c1);
+  border-radius:20px;
+}
+.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.report-stat{text-align:center}
+.report-stat strong{display:block;font-size:29px;color:#89b7ff}
+.report-stat span{font-size:12px;color:var(--muted)}
+.note{
+  padding:13px 15px;
+  border-radius:12px;
+  border:1px solid #67532c;
+  background:#392e1b70;
+  color:#f4d49b;
+  font-size:12px;
+  line-height:1.8;
+}
+.empty{padding:30px;text-align:center;color:var(--muted);font-size:13px}
+.toast{
+  position:fixed;
+  bottom:24px;
+  inset-inline-end:24px;
+  z-index:100;
+  background:#1d3558;
+  border:1px solid #4776b5;
+  padding:13px 20px;
+  border-radius:12px;
+  font-size:13px;
+  box-shadow:0 15px 45px #0008;
+}
+.mobile-overlay{display:none}
+.footer-note{
+  text-align:center;
+  color:#7f91af;
+  font-size:11px;
+  padding:25px 0;
+}
+@media(max-width:1100px){
+  .grid-kpi{grid-template-columns:repeat(2,1fr)}
+  .two-columns{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  .sidebar{transform:translateX(110%)}
+  html[dir=ltr] .sidebar{transform:translateX(-110%)}
+  .sidebar.open{transform:translateX(0)!important}
+  .mobile-overlay.open{
+    display:block;position:fixed;inset:0;
+    background:#0009;z-index:45;
+  }
+  .main{margin:0;width:100%}
+  .menu-toggle{display:grid}
+  .topbar{padding:12px 15px}
+  .topbar h2{font-size:15px}
+  .topbar p{display:none}
+  .status{display:none}
+  .content{padding:14px}
+  .hero{padding:20px}
+  .hero h3{font-size:20px}
+  .hero-symbol{display:none}
+  .policy-grid,.form-grid,.report-grid{grid-template-columns:1fr}
+}
+@media(max-width:450px){
+  .grid-kpi{grid-template-columns:1fr}
+  .panel{padding:15px}
+  .topbar{gap:7px}
+  .actions{gap:5px}
+  .actions .btn{padding:9px}
+  .chat-form .btn{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+@media print{
+  .sidebar,.topbar,.toolbar,.footer-note,.mobile-overlay{display:none!important}
+  .main{margin:0;width:100%}
+  body{background:white;color:black}
+  .panel{background:white;color:black;border:1px solid #aaa}
+  .panel *{color:black!important}
+}
+</style>
+</head>
+
+<body>
+<div class="mobile-overlay" id="overlay" onclick="closeMenu()"></div>
+
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-icon">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <div>
+      <h1>GovAI <span style="color:#70aaff">Enterprise</span></h1>
+      <small data-i18n="school">مدرسة منار الإيمان الخاصة</small>
+    </div>
+  </div>
+
+  <nav class="nav" aria-label="Main navigation">
+    <button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard')">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span data-i18n="navDashboard">لوحة التحليلات</span>
+    </button>
+    <button class="nav-btn" data-page="governance" onclick="navigate('governance')">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span data-i18n="navGovernance">حوكمة النماذج</span>
+    </button>
+    <button class="nav-btn" data-page="assistant" onclick="navigate('assistant')">
+      <i class="fa-solid fa-robot"></i>
+      <span data-i18n="navAssistant">المساعد المعرفي</span>
+    </button>
+    <button class="nav-btn" data-page="policies" onclick="navigate('policies')">
+      <i class="fa-solid fa-book-open"></i>
+      <span data-i18n="navPolicies">مكتبة السياسات</span>
+    </button>
+    <button class="nav-btn" data-page="sandbox" onclick="navigate('sandbox')">
+      <i class="fa-solid fa-flask"></i>
+      <span data-i18n="navSandbox">مختبر المحاكاة</span>
+    </button>
+    <button class="nav-btn" data-page="reports" onclick="navigate('reports')">
+      <i class="fa-solid fa-file-lines"></i>
+      <span data-i18n="navReports">التقارير والسجلات</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="hackathon">
+      <strong><i class="fa-solid fa-trophy"></i>
+        <span data-i18n="hackTitle">هاكاثون الإمارات 2026</span>
+      </strong>
+      <p data-i18n="hackSub">مسار الجيل الناشئ - الشارقة</p>
+      <p data-i18n="studentProject">مشروع طلابي تجريبي</p>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="btn icon-btn menu-toggle" onclick="toggleMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div>
+      <h2 id="page-title">لوحة التحليلات القيادية</h2>
+      <p data-i18n="topSubtitle">منصة تجريبية لحوكمة الذكاء الاصطناعي</p>
+    </div>
+  </div>
+  <div class="actions">
+    <span class="status">
+      <i class="fa-solid fa-circle-check"></i>
+      <span data-i18n="demoStatus">الوضع التجريبي نشط</span>
+    </span>
+    <button class="btn" onclick="toggleLanguage()" id="languageButton" aria-label="Switch language">
+      <i class="fa-solid fa-globe"></i>
+      <span id="languageText">English</span>
+    </button>
+  </div>
+</header>
+
+<main class="content">
+
+<!-- DASHBOARD -->
+<section class="view" id="view-dashboard">
+  <div class="hero">
+    <div>
+      <span class="eyebrow" data-i18n="heroBadge">UAE HACKATHON • NEXTGEN</span>
+      <h3 data-i18n="heroTitle">نحو ذكاء اصطناعي حكومي أكثر موثوقية</h3>
+      <p data-i18n="heroDesc">
+        منصة تعليمية تفاعلية تجمع تحليل الأداء والحوكمة
+        ومراجعة السياسات واختبار النماذج في مكان واحد.
+      </p>
+      <button class="btn btn-primary" style="margin-top:17px" onclick="navigate('governance')">
+        <i class="fa-solid fa-arrow-right"></i>
+        <span data-i18n="startAudit">ابدأ فحص الحوكمة</span>
+      </button>
+    </div>
+    <div class="hero-symbol">
+      <i class="fa-solid fa-brain"></i>
+    </div>
+  </div>
+
+  <div class="note" style="margin-bottom:20px" data-i18n="demoNotice">
+    جميع المؤشرات الأولية بيانات توضيحية وليست قياسات فعلية
+    لجهة حكومية أو إثباتًا لاعتماد أو تشفير حقيقي.
+  </div>
+
+  <div class="grid-kpi">
+    <div class="panel kpi">
+      <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+      <h4 data-i18n="kpiTime">خفض الوقت الافتراضي</h4>
+      <div class="number" id="kpiTimeValue">80%</div>
+      <p data-i18n="kpiTimeDesc">مثال توضيحي مقارنة بالعمل اليدوي</p>
+    </div>
+    <div class="panel kpi">
+      <div class="kpi-icon"><i class="fa-solid fa-check-double"></i></div>
+      <h4 data-i18n="kpiCompliance">متوسط نتائج الفحص</h4>
+      <div class="number" id="kpiComplianceValue">—</div>
+      <p data-i18n="kpiComplianceDesc">يُحسب من اختبارات المحاكاة</p>
+    </div>
+    <div class="panel kpi">
+      <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
+      <h4 data-i18n="kpiModels">النماذج التجريبية</h4>
+      <div class="number" id="kpiModelsValue">3</div>
+      <p data-i18n="kpiModelsDesc">نماذج افتراضية للمقارنة</p>
+    </div>
+    <div class="panel kpi">
+      <div class="kpi-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+      <h4 data-i18n="kpiAudits">عمليات التدقيق المنفذة</h4>
+      <div class="number" id="kpiAuditsValue">0</div>
+      <p data-i18n="kpiAuditsDesc">اختبارات محفوظة في هذا المتصفح</p>
+    </div>
+  </div>
+
+  <div class="two-columns">
+    <div class="panel">
+      <h3 class="panel-title" data-i18n="chartTimeTitle">مقارنة زمن إنجاز المهام</h3>
+      <p class="panel-sub" data-i18n="chartTimeSub">بيانات افتراضية لأربعة أسابيع</p>
+      <div class="chart-wrap"><canvas id="timeChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3 class="panel-title" data-i18n="chartGovernanceTitle">محاور تقييم الحوكمة</h3>
+      <p class="panel-sub" data-i18n="chartGovernanceSub">توزيع أوزان المعايير التجريبية</p>
+      <div class="chart-wrap"><canvas id="governanceChart"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- GOVERNANCE -->
+<section class="view hidden" id="view-governance">
+  <div class="panel">
+    <div class="toolbar">
+      <div>
+        <h3 class="panel-title" data-i18n="governanceTitle">مركز حوكمة واختبار النماذج</h3>
+        <p class="panel-sub" data-i18n="governanceSub">
+          سجل تجريبي لاختبار معايير الأمان والدقة والشفافية
+        </p>
+      </div>
+      <button class="btn btn-primary" onclick="runAudit()">
+        <i class="fa-solid fa-rotate"></i>
+        <span data-i18n="runAudit">تشغيل تدقيق تجريبي</span>
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <input class="input search-box" id="modelSearch"
+        data-placeholder="searchModels"
+        placeholder="ابحث عن نموذج..."
+        oninput="renderModels()">
+      <select class="select" style="max-width:190px" id="modelFilter" onchange="renderModels()">
+        <option value="all" data-i18n="filterAll">كل الحالات</option>
+        <option value="ready" data-i18n="filterReady">جاهز مبدئيًا</option>
+        <option value="review" data-i18n="filterReview">يحتاج مراجعة</option>
+      </select>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="thModel">النموذج</th>
+            <th data-i18n="thUse">حالة الاستخدام</th>
+            <th data-i18n="thAccuracy">دقة افتراضية</th>
+            <th data-i18n="thLatency">زمن افتراضي</th>
+            <th data-i18n="thScore">درجة التقييم</th>
+            <th data-i18n="thStatus">الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="modelsTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:18px">
+    <h3 class="panel-title" data-i18n="auditResultTitle">نتيجة آخر تدقيق</h3>
+    <div id="auditResult" class="result" data-i18n="noAudit">
+      لم يتم تشغيل أي تدقيق بعد.
+    </div>
+  </div>
+</section>
+
+<!-- ASSISTANT -->
+<section class="view hidden" id="view-assistant">
+  <div class="panel chat-shell">
+    <div class="toolbar">
+      <div>
+        <h3 class="panel-title" data-i18n="assistantTitle">المساعد المعرفي GovAI</h3>
+        <p class="panel-sub" data-i18n="assistantSub">
+          مساعد إرشادي محلي - ليس متصلًا بخدمة ذكاء اصطناعي خارجية
+        </p>
+      </div>
+      <button class="btn btn-danger" onclick="clearChat()">
+        <i class="fa-solid fa-trash"></i>
+        <span data-i18n="clearChat">مسح المحادثة</span>
+      </button>
+    </div>
+
+    <div class="quick-questions">
+      <button onclick="askQuick('strategy')" data-i18n="quickStrategy">استراتيجية الإمارات 2031</button>
+      <button onclick="askQuick('privacy')" data-i18n="quickPrivacy">حماية البيانات</button>
+      <button onclick="askQuick('governance')" data-i18n="quickGovernance">حوكمة الذكاء الاصطناعي</button>
+      <button onclick="askQuick('rag')" data-i18n="quickRag">كيف يعمل RAG؟</button>
+    </div>
+
+    <div id="chatMessages" class="chat-messages" role="log" aria-live="polite"></div>
+
+    <form class="chat-form" onsubmit="sendMessage(event)">
+      <input id="chatInput" class="input" maxlength="600"
+        data-placeholder="chatPlaceholder"
+        placeholder="اكتب سؤالك هنا..."
+        autocomplete="off" required>
+      <button class="btn btn-primary" type="submit">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span data-i18n="send">إرسال</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- POLICIES -->
+<section class="view hidden" id="view-policies">
+  <div class="panel">
+    <div class="toolbar">
+      <div>
+        <h3 class="panel-title" data-i18n="policiesTitle">مكتبة المراجع والسياسات</h3>
+        <p class="panel-sub" data-i18n="policiesSub">
+          روابط مرجعية ومحتوى توضيحي؛ لا يوجد فهرس RAG متصل حاليًا
+        </p>
+      </div>
+      <input id="policySearch" class="input search-box"
+        data-placeholder="searchPolicies"
+        placeholder="ابحث في المكتبة..."
+        oninput="renderPolicies()">
+    </div>
+    <div class="policy-grid" id="policyGrid"></div>
+  </div>
+</section>
+
+<!-- SANDBOX -->
+<section class="view hidden" id="view-sandbox">
+  <div class="panel">
+    <h3 class="panel-title" data-i18n="sandboxTitle">مختبر اختبار الاستجابة</h3>
+    <p class="panel-sub" data-i18n="sandboxSub">
+      محاكاة تعليمية لإعدادات النماذج وسيناريوهات المخاطر
+    </p>
+
+    <div class="form-grid">
+      <div>
+        <label class="field-label" for="sandboxPrompt" data-i18n="promptLabel">نص الاختبار</label>
+        <textarea class="textarea" rows="5" id="sandboxPrompt"></textarea>
+
+        <label class="field-label" for="sandboxScenario" style="margin-top:16px" data-i18n="scenarioLabel">نوع السيناريو</label>
+        <select class="select" id="sandboxScenario">
+          <option value="general" data-i18n="scenarioGeneral">استفسار عام</option>
+          <option value="privacy" data-i18n="scenarioPrivacy">خصوصية البيانات</option>
+          <option value="security" data-i18n="scenarioSecurity">الأمن السيبراني</option>
+          <option value="policy" data-i18n="scenarioPolicy">الامتثال للسياسات</option>
+        </select>
+
+        <label class="field-label" for="temperature" style="margin-top:18px">
+          <span data-i18n="temperatureLabel">درجة العشوائية (Temperature)</span>:
+          <span id="temperatureValue">0.4</span>
+        </label>
+        <input type="range" id="temperature" class="range" min="0" max="1" step="0.1" value="0.4"
+          oninput="document.getElementById('temperatureValue').textContent=this.value">
+
+        <button class="btn btn-purple" style="width:100%;margin-top:20px" onclick="runSandbox()">
+          <i class="fa-solid fa-play"></i>
+          <span data-i18n="runSimulation">تشغيل المحاكاة</span>
+        </button>
+      </div>
+
+      <div>
+        <label class="field-label" data-i18n="simulationOutput">نتائج المحاكاة</label>
+        <div id="sandboxResult" class="result" style="min-height:260px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTS -->
+<section class="view hidden" id="view-reports">
+  <div class="panel">
+    <div class="toolbar">
+      <div>
+        <h3 class="panel-title" data-i18n="reportsTitle">التقارير وسجل الاختبارات</h3>
+        <p class="panel-sub" data-i18n="reportsSub">
+          متابعة العمليات التجريبية التي تم تنفيذها في المتصفح
+        </p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-green" onclick="exportReport()">
+          <i class="fa-solid fa-download"></i>
+          <span data-i18n="exportReport">تصدير JSON</span>
+        </button>
+        <button class="btn" onclick="window.print()">
+          <i class="fa-solid fa-print"></i>
+          <span data-i18n="printReport">طباعة</span>
+        </button>
+        <button class="btn btn-danger" onclick="clearReports()">
+          <i class="fa-solid fa-trash"></i>
+          <span data-i18n="clearReports">مسح السجل</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="report-grid" style="margin-bottom:20px">
+      <div class="panel report-stat">
+        <strong id="reportAuditCount">0</strong>
+        <span data-i18n="reportAudits">عمليات التدقيق</span>
+      </div>
+      <div class="panel report-stat">
+        <strong id="reportSimulationCount">0</strong>
+        <span data-i18n="reportSimulations">عمليات المحاكاة</span>
+      </div>
+      <div class="panel report-stat">
+        <strong id="reportTotalCount">0</strong>
+        <span data-i18n="reportTotal">إجمالي العمليات</span>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="thDate">التاريخ</th>
+            <th data-i18n="thOperation">العملية</th>
+            <th data-i18n="thDetails">التفاصيل</th>
+          </tr>
+        </thead>
+        <tbody id="reportsTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer class="footer-note" data-i18n="footer">
+  GovAI Enterprise • مشروع طلاب مدرسة منار الإيمان الخاصة • نموذج أولي تجريبي
+</footer>
+
+</main>
+</div>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================
+   GOVAI ENTERPRISE
+   BILINGUAL INTERACTIVE PROTOTYPE
+   ===================================== */
+
+const translations = {
+  ar: {
+    school:"مدرسة منار الإيمان الخاصة",
+    navDashboard:"لوحة التحليلات القيادية",
+    navGovernance:"حوكمة واختبار النماذج",
+    navAssistant:"المساعد المعرفي",
+    navPolicies:"مكتبة السياسات الحكومية",
+    navSandbox:"مختبر المحاكاة",
+    navReports:"التقارير والسجلات",
+    hackTitle:"هاكاثون الإمارات 2026",
+    hackSub:"مسار الجيل الناشئ - الشارقة",
+    studentProject:"مشروع طلابي تجريبي",
+    topSubtitle:"منصة تجريبية لحوكمة الذكاء الاصطناعي",
+    demoStatus:"الوضع التجريبي نشط",
+    heroBadge:"هاكاثون الإمارات • الجيل الناشئ",
+    heroTitle:"نحو ذكاء اصطناعي حكومي أكثر موثوقية",
+    heroDesc:"منصة تعليمية تفاعلية تجمع تحليل الأداء والحوكمة ومراجعة السياسات واختبار النماذج في مكان واحد.",
+    startAudit:"ابدأ فحص الحوكمة",
+    demoNotice:"جميع المؤشرات الأولية بيانات توضيحية وليست قياسات فعلية لجهة حكومية أو إثباتًا لاعتماد أو تشفير حقيقي.",
+    kpiTime:"خفض الوقت الافتراضي",
+    kpiTimeDesc:"مثال توضيحي مقارنة بالعمل اليدوي",
+    kpiCompliance:"متوسط نتائج الفحص",
+    kpiComplianceDesc:"يُحسب من اختبارات المحاكاة",
+    kpiModels:"النماذج التجريبية",
+    kpiModelsDesc:"نماذج افتراضية للمقارنة",
+    kpiAudits:"عمليات التدقيق المنفذة",
+    kpiAuditsDesc:"اختبارات محفوظة في هذا المتصفح",
+    chartTimeTitle:"مقارنة زمن إنجاز المهام",
+    chartTimeSub:"بيانات افتراضية لأربعة أسابيع",
+    chartGovernanceTitle:"محاور تقييم الحوكمة",
+    chartGovernanceSub:"توزيع أوزان المعايير التجريبية",
+    manualTime:"الطريقة اليدوية",
+    platformTime:"منصة GovAI",
+    security:"الأمان",
+    accuracy:"الدقة",
+    transparency:"الشفافية",
+    governanceTitle:"مركز حوكمة واختبار النماذج",
+    governanceSub:"سجل تجريبي لاختبار معايير الأمان والدقة والشفافية",
+    runAudit:"تشغيل تدقيق تجريبي",
+    searchModels:"ابحث عن نموذج...",
+    filterAll:"كل الحالات",
+    filterReady:"جاهز مبدئيًا",
+    filterReview:"يحتاج مراجعة",
+    thModel:"النموذج",
+    thUse:"حالة الاستخدام",
+    thAccuracy:"دقة افتراضية",
+    thLatency:"زمن افتراضي",
+    thScore:"درجة التقييم",
+    thStatus:"الحالة",
+    auditResultTitle:"نتيجة آخر تدقيق",
+    noAudit:"لم يتم تشغيل أي تدقيق بعد.",
+    auditComplete:"اكتمل التدقيق التجريبي",
+    auditNote:"النتائج مبنية على بيانات اختبار افتراضية، ولا تمثل اعتمادًا رسميًا.",
+    assistantTitle:"المساعد المعرفي GovAI",
+    assistantSub:"مساعد إرشادي محلي - ليس متصلًا بخدمة ذكاء اصطناعي خارجية",
+    clearChat:"مسح المحادثة",
+    quickStrategy:"استراتيجية الإمارات 2031",
+    quickPrivacy:"حماية البيانات",
+    quickGovernance:"حوكمة الذكاء الاصطناعي",
+    quickRag:"كيف يعمل RAG؟",
+    chatPlaceholder:"اكتب سؤالك هنا...",
+    send:"إرسال",
+    welcome:"مرحبًا بك في GovAI! أستطيع شرح مفاهيم الحوكمة والخصوصية واستراتيجية الإمارات للذكاء الاصطناعي وتقنية RAG. إجاباتي إرشادية وليست استشارة رسمية.",
+    fallback:"لا أملك معلومات كافية للإجابة عن هذا السؤال من قاعدة المعرفة التجريبية. جرّب سؤالًا عن الحوكمة أو الخصوصية أو استراتيجية الإمارات 2031 أو تقنية RAG.",
+    answerStrategy:"تهدف استراتيجية الإمارات للذكاء الاصطناعي 2031 إلى تعزيز توظيف الذكاء الاصطناعي ودعم الابتكار والخدمات المستقبلية. للمعلومات الرسمية راجع بوابة حكومة الإمارات.",
+    answerPrivacy:"تتطلب حماية البيانات تحديد الصلاحيات وتقليل جمع المعلومات الحساسة ومراجعة الوصول والاحتفاظ بالسجلات. لا تدخل بيانات شخصية حقيقية في هذا النموذج التجريبي.",
+    answerGovernance:"حوكمة الذكاء الاصطناعي تشمل الشفافية والمساءلة والعدالة والخصوصية والأمان والإشراف البشري. يجب تقييم النموذج قبل استخدامه في قرارات مؤثرة.",
+    answerRag:"RAG هو أسلوب يجمع استرجاع المعلومات من مصادر محددة مع توليد الإجابات. يحتاج إلى فهرس مستندات ومحرك استرجاع ونموذج لغوي. هذه النسخة تقدم مساعدًا إرشاديًا محليًا وليست نظام RAG فعليًا.",
+    policiesTitle:"مكتبة المراجع والسياسات",
+    policiesSub:"روابط مرجعية ومحتوى توضيحي؛ لا يوجد فهرس RAG متصل حاليًا",
+    searchPolicies:"ابحث في المكتبة...",
+    officialReference:"مرجع رسمي",
+    guidanceReference:"مرجع إرشادي",
+    openReference:"فتح المرجع",
+    policy1Title:"استراتيجية الإمارات للذكاء الاصطناعي 2031",
+    policy1Desc:"تعرف على توجهات دولة الإمارات في توظيف الذكاء الاصطناعي ودعم الابتكار.",
+    policy2Title:"البوابة الرسمية لحكومة الإمارات",
+    policy2Desc:"مصدر للمعلومات الحكومية والخدمات والسياسات العامة.",
+    policy3Title:"مجلس الأمن السيبراني الإماراتي",
+    policy3Desc:"مصدر للتوعية والمبادرات المتعلقة بالأمن السيبراني.",
+    policy4Title:"مبادئ الذكاء الاصطناعي المسؤول",
+    policy4Desc:"مفاهيم توضيحية عن الشفافية والعدالة والمساءلة والخصوصية.",
+    sandboxTitle:"مختبر اختبار الاستجابة",
+    sandboxSub:"محاكاة تعليمية لإعدادات النماذج وسيناريوهات المخاطر",
+    promptLabel:"نص الاختبار",
+    scenarioLabel:"نوع السيناريو",
+    scenarioGeneral:"استفسار عام",
+    scenarioPrivacy:"خصوصية البيانات",
+    scenarioSecurity:"الأمن السيبراني",
+    scenarioPolicy:"الامتثال للسياسات",
+    temperatureLabel:"درجة العشوائية (Temperature)",
+    runSimulation:"تشغيل المحاكاة",
+    simulationOutput:"نتائج المحاكاة",
+    sandboxDefault:"اضغط على تشغيل المحاكاة لعرض نتيجة تجريبية.",
+    defaultPrompt:"اشرح أهمية حوكمة الذكاء الاصطناعي في الخدمات الحكومية.",
+    simulationDone:"اكتملت المحاكاة التعليمية",
+    scenarioResult:"السيناريو",
+    temperatureResult:"درجة العشوائية",
+    responseStyle:"نمط الاستجابة المتوقع",
+    stableResponse:"أكثر ثباتًا وتركيزًا",
+    creativeResponse:"أكثر تنوعًا",
+    riskLevel:"مؤشر المراجعة الإرشادي",
+    lowRisk:"منخفض",
+    mediumRisk:"متوسط",
+    highRisk:"مرتفع",
+    simulationWarning:"هذه نتيجة قواعد محلية مبسطة وليست استجابة من نموذج ذكاء اصطناعي أو اختبارًا أمنيًا حقيقيًا.",
+    reportsTitle:"التقارير وسجل الاختبارات",
+    reportsSub:"متابعة العمليات التجريبية التي تم تنفيذها في المتصفح",
+    exportReport:"تصدير JSON",
+    printReport:"طباعة",
+    clearReports:"مسح السجل",
+    reportAudits:"عمليات التدقيق",
+    reportSimulations:"عمليات المحاكاة",
+    reportTotal:"إجمالي العمليات",
+    thDate:"التاريخ",
+    thOperation:"العملية",
+    thDetails:"التفاصيل",
+    noReports:"لا توجد عمليات مسجلة بعد.",
+    auditOperation:"تدقيق الحوكمة",
+    simulationOperation:"محاكاة نموذج",
+    clearConfirm:"هل تريد حذف سجل العمليات من هذا المتصفح؟",
+    cleared:"تم مسح السجل.",
+    chatCleared:"تم مسح المحادثة.",
+    exported:"تم تصدير التقرير.",
+    noResults:"لا توجد نتائج مطابقة.",
+    footer:"GovAI Enterprise • مشروع طلاب مدرسة منار الإيمان الخاصة • نموذج أولي تجريبي",
+    usePolicies:"استرجاع السياسات",
+    useServices:"دعم الخدمات",
+    useDocuments:"تحليل المستندات",
+    demoOnly:"بيانات تجريبية",
+    auditSummary:"متوسط درجات النماذج",
+    page_dashboard:"لوحة التحليلات القيادية",
+    page_governance:"حوكمة واختبار النماذج",
+    page_assistant:"المساعد المعرفي الذكي",
+    page_policies:"مكتبة السياسات الحكومية",
+    page_sandbox:"مختبر المحاكاة",
+    page_reports:"التقارير والسجلات"
+  },
+
+  en: {
+    school:"Manar Al Iman Private School",
+    navDashboard:"Executive Analytics Dashboard",
+    navGovernance:"Model Governance & Testing",
+    navAssistant:"Knowledge Assistant",
+    navPolicies:"Government Policy Library",
+    navSandbox:"Simulation Sandbox",
+    navReports:"Reports & Activity Logs",
+    hackTitle:"UAE Hackathon 2026",
+    hackSub:"NextGen Track - Sharjah",
+    studentProject:"Student Prototype Project",
+    topSubtitle:"Experimental AI Governance Platform",
+    demoStatus:"Demo Mode Active",
+    heroBadge:"UAE HACKATHON • NEXTGEN",
+    heroTitle:"Building More Trustworthy Government AI",
+    heroDesc:"An interactive educational platform combining performance analytics, governance, policy references, and model testing in one place.",
+    startAudit:"Start Governance Review",
+    demoNotice:"All initial indicators are illustrative. They are not actual government measurements or proof of certification, encryption, or security compliance.",
+    kpiTime:"Illustrative Time Reduction",
+    kpiTimeDesc:"Example compared with manual work",
+    kpiCompliance:"Average Evaluation Score",
+    kpiComplianceDesc:"Calculated from simulated model tests",
+    kpiModels:"Demo Models",
+    kpiModelsDesc:"Virtual models for comparison",
+    kpiAudits:"Completed Audit Runs",
+    kpiAuditsDesc:"Tests stored in this browser",
+    chartTimeTitle:"Task Processing Time Comparison",
+    chartTimeSub:"Illustrative data across four weeks",
+    chartGovernanceTitle:"Governance Evaluation Pillars",
+    chartGovernanceSub:"Distribution of simulated evaluation weights",
+    manualTime:"Manual Process",
+    platformTime:"GovAI Platform",
+    security:"Security",
+    accuracy:"Accuracy",
+    transparency:"Transparency",
+    governanceTitle:"Model Governance & Testing Center",
+    governanceSub:"Experimental registry for security, accuracy, and transparency evaluation",
+    runAudit:"Run Simulated Audit",
+    searchModels:"Search models...",
+    filterAll:"All Statuses",
+    filterReady:"Preliminarily Ready",
+    filterReview:"Needs Review",
+    thModel:"Model",
+    thUse:"Use Case",
+    thAccuracy:"Illustrative Accuracy",
+    thLatency:"Illustrative Latency",
+    thScore:"Evaluation Score",
+    thStatus:"Status",
+    auditResultTitle:"Latest Audit Result",
+    noAudit:"No audit has been performed yet.",
+    auditComplete:"Simulated audit completed",
+    auditNote:"Results use illustrative test data and do not represent official certification.",
+    assistantTitle:"GovAI Knowledge Assistant",
+    assistantSub:"Local guidance assistant - not connected to an external AI service",
+    clearChat:"Clear Conversation",
+    quickStrategy:"UAE AI Strategy 2031",
+    quickPrivacy:"Data Protection",
+    quickGovernance:"AI Governance",
+    quickRag:"How Does RAG Work?",
+    chatPlaceholder:"Type your question here...",
+    send:"Send",
+    welcome:"Welcome to GovAI! I can explain governance, privacy, the UAE AI Strategy, and RAG technology. My responses are educational guidance, not official advice.",
+    fallback:"I do not have enough information in this demo knowledge base to answer that question. Try asking about governance, privacy, the UAE AI Strategy 2031, or RAG.",
+    answerStrategy:"The UAE AI Strategy 2031 aims to expand AI adoption and support innovation and future services. Consult the UAE Government portal for official information.",
+    answerPrivacy:"Data protection requires access controls, data minimization, access reviews, and appropriate records. Do not enter real personal information in this demo.",
+    answerGovernance:"AI governance includes transparency, accountability, fairness, privacy, security, and human oversight. Models should be evaluated before being used for consequential decisions.",
+    answerRag:"RAG combines information retrieval from selected sources with answer generation. It requires a document index, retrieval engine, and language model. This version is a local guidance assistant, not a functioning RAG system.",
+    policiesTitle:"Policy & Reference Library",
+    policiesSub:"Reference links and explanatory content; no connected RAG index is currently available",
+    searchPolicies:"Search the library...",
+    officialReference:"Official Reference",
+    guidanceReference:"Educational Guidance",
+    openReference:"Open Reference",
+    policy1Title:"UAE Artificial Intelligence Strategy 2031",
+    policy1Desc:"Explore the UAE's direction for AI adoption and innovation.",
+    policy2Title:"Official UAE Government Portal",
+    policy2Desc:"A source for government information, services, and public policies.",
+    policy3Title:"UAE Cyber Security Council",
+    policy3Desc:"Information on cybersecurity awareness and initiatives.",
+    policy4Title:"Responsible AI Principles",
+    policy4Desc:"Educational concepts covering transparency, fairness, accountability, and privacy.",
+    sandboxTitle:"AI Response Testing Sandbox",
+    sandboxSub:"Educational simulation of model settings and risk scenarios",
+    promptLabel:"Test Prompt",
+    scenarioLabel:"Scenario Type",
+    scenarioGeneral:"General Inquiry",
+    scenarioPrivacy:"Data Privacy",
+    scenarioSecurity:"Cybersecurity",
+    scenarioPolicy:"Policy Compliance",
+    temperatureLabel:"Temperature",
+    runSimulation:"Run Simulation",
+    simulationOutput:"Simulation Results",
+    sandboxDefault:"Click Run Simulation to display an illustrative result.",
+    defaultPrompt:"Explain the importance of AI governance in government services.",
+    simulationDone:"Educational simulation completed",
+    scenarioResult:"Scenario",
+    temperatureResult:"Temperature",
+    responseStyle:"Expected Response Style",
+    stableResponse:"More focused and consistent",
+    creativeResponse:"More varied",
+    riskLevel:"Guidance Review Indicator",
+    lowRisk:"Low",
+    mediumRisk:"Medium",
+    highRisk:"High",
+    simulationWarning:"This is a simplified local rule-based result, not an actual AI model response or security test.",
+    reportsTitle:"Reports & Test Activity",
+    reportsSub:"Track experimental operations performed in this browser",
+    exportReport:"Export JSON",
+    printReport:"Print",
+    clearReports:"Clear Logs",
+    reportAudits:"Audit Runs",
+    reportSimulations:"Simulations",
+    reportTotal:"Total Operations",
+    thDate:"Date",
+    thOperation:"Operation",
+    thDetails:"Details",
+    noReports:"No recorded operations yet.",
+    auditOperation:"Governance Audit",
+    simulationOperation:"Model Simulation",
+    clearConfirm:"Delete the activity log from this browser?",
+    cleared:"Activity log cleared.",
+    chatCleared:"Conversation cleared.",
+    exported:"Report exported.",
+    noResults:"No matching results.",
+    footer:"GovAI Enterprise • Manar Al Iman Private School Student Project • Experimental Prototype",
+    usePolicies:"Policy Retrieval",
+    useServices:"Service Support",
+    useDocuments:"Document Analysis",
+    demoOnly:"Demonstration Data",
+    auditSummary:"Average Model Score",
+    page_dashboard:"Executive Analytics Dashboard",
+    page_governance:"Model Governance & Testing",
+    page_assistant:"AI Knowledge Assistant",
+    page_policies:"Government Policy Library",
+    page_sandbox:"Simulation Sandbox",
+    page_reports:"Reports & Activity Logs"
+  }
+};
+
+/* =====================================
+   APPLICATION STATE
+   ===================================== */
+
+const PAGES = [
+  "dashboard",
+  "governance",
+  "assistant",
+  "policies",
+  "sandbox",
+  "reports"
+];
+
+const STORAGE_KEY = "govai-enterprise-v3";
+
+function readStorage(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  }catch(error){
+    return {};
+  }
+}
+
+const saved = readStorage();
+
+const state = {
+  lang:saved.lang === "en" ? "en" : "ar",
+  page:"dashboard",
+  logs:Array.isArray(saved.logs) ? saved.logs.slice(-100) : [],
+  auditCount:Number.isInteger(saved.auditCount) && saved.auditCount >= 0
+    ? saved.auditCount : 0,
+  lastAudit:null,
+  chat:[],
+  chart1:null,
+  chart2:null
+};
+
+const demoModels = [
+  {
+    id:"gov-llm",
+    name:"Gov-LLM Engine v4",
+    use:"usePolicies",
+    accuracy:96.2,
+    latency:110,
+    security:95,
+    transparency:90,
+    score:94
+  },
+  {
+    id:"service-ai",
+    name:"ServiceAI Assistant",
+    use:"useServices",
+    accuracy:91.4,
+    latency:175,
+    security:88,
+    transparency:82,
+    score:87
+  },
+  {
+    id:"document-ai",
+    name:"DocumentAI Analyzer",
+    use:"useDocuments",
+    accuracy:86.8,
+    latency:230,
+    security:78,
+    transparency:76,
+    score:79
+  }
+];
+
+const policies = [
+  {
+    id:1,
+    title:"policy1Title",
+    desc:"policy1Desc",
+    type:"officialReference",
+    url:"https://ai.gov.ae/"
+  },
+  {
+    id:2,
+    title:"policy2Title",
+    desc:"policy2Desc",
+    type:"officialReference",
+    url:"https://u.ae/"
+  },
+  {
+    id:3,
+    title:"policy3Title",
+    desc:"policy3Desc",
+    type:"officialReference",
+    url:"https://csc.gov.ae/"
+  },
+  {
+    id:4,
+    title:"policy4Title",
+    desc:"policy4Desc",
+    type:"guidanceReference",
+    url:null
+  }
+];
+
+function t(key){
+  return translations[state.lang][key] || key;
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify({
+      lang:state.lang,
+      logs:state.logs.slice(-100),
+      auditCount:state.auditCount
+    }));
+  }catch(error){
+    console.warn("Local storage unavailable");
+  }
+}
+
+function formatDate(date){
+  return new Intl.DateTimeFormat(
+    state.lang === "ar" ? "ar-AE" : "en-AE",
+    {dateStyle:"medium",timeStyle:"short"}
+  ).format(new Date(date));
+}
+
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,function(char){
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char];
+  });
+}
+
+/* =====================================
+   NAVIGATION & RESPONSIVENESS
+   ===================================== */
+
+function navigate(page){
+  if(!PAGES.includes(page)) return;
+
+  state.page=page;
+
+  PAGES.forEach(function(name){
+    const view=document.getElementById("view-"+name);
+    if(view) view.classList.toggle("hidden",name!==page);
+  });
+
+  document.querySelectorAll(".nav-btn").forEach(function(button){
+    const active=button.dataset.page===page;
+    button.classList.toggle("active",active);
+    if(active) button.setAttribute("aria-current","page");
+    else button.removeAttribute("aria-current");
+  });
+
+  document.getElementById("page-title").textContent=t("page_"+page);
+  closeMenu();
+  window.scrollTo({top:0,behavior:"smooth"});
+
+  if(page==="dashboard"){
+    requestAnimationFrame(renderCharts);
+  }
+  if(page==="reports") renderReports();
+}
+
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("overlay").classList.toggle("open");
+}
+
+function closeMenu(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+
+/* =====================================
+   COMPLETE LANGUAGE SWITCHING
+   ===================================== */
+
+function applyLanguage(){
+  document.documentElement.lang=state.lang;
+  document.documentElement.dir=state.lang==="ar"?"rtl":"ltr";
+
+  document.getElementById("languageText").textContent=
+    state.lang==="ar"?"English":"العربية";
+
+  document.querySelectorAll("[data-i18n]").forEach(function(element){
+    element.textContent=t(element.dataset.i18n);
+  });
+
+  document.querySelectorAll("[data-placeholder]").forEach(function(element){
+    element.placeholder=t(element.dataset.placeholder);
+  });
+
+  document.title="GovAI Enterprise | "+
+    t("page_"+state.page);
+
+  document.getElementById("sandboxPrompt").placeholder=t("defaultPrompt");
+
+  renderModels();
+  renderPolicies();
+  renderReports();
+  renderChat();
+  renderSandboxDefault();
+  renderAuditResult();
+  updateDashboard();
+
+  document.getElementById("page-title").textContent=
+    t("page_"+state.page);
+
+  if(state.page==="dashboard"){
+    requestAnimationFrame(renderCharts);
+  }
+
+  saveState();
+}
+
+function toggleLanguage(){
+  state.lang=state.lang==="ar"?"en":"ar";
+  applyLanguage();
+}
+
+/* =====================================
+   DASHBOARD & CHARTS
+   ===================================== */
+
+function averageScore(){
+  return Math.round(
+    demoModels.reduce((sum,m)=>sum+m.score,0)/demoModels.length
+  );
+}
+
+function updateDashboard(){
+  document.getElementById("kpiModelsValue").textContent=
+    demoModels.length;
+
+  document.getElementById("kpiAuditsValue").textContent=
+    state.auditCount;
+
+  document.getElementById("kpiComplianceValue").textContent=
+    state.auditCount>0 ? averageScore()+"%" : "—";
+}
+
+function renderCharts(){
+  if(typeof Chart==="undefined") return;
+
+  if(state.chart1) state.chart1.destroy();
+  if(state.chart2) state.chart2.destroy();
+
+  Chart.defaults.color="#aebed7";
+  Chart.defaults.font.family=
+    state.lang==="ar"?"Cairo":"Inter";
+
+  const lineCanvas=document.getElementById("timeChart");
+  const doughnutCanvas=document.getElementById("governanceChart");
+
+  if(!lineCanvas || !doughnutCanvas) return;
+
+  state.chart1=new Chart(lineCanvas,{
+    type:"line",
+    data:{
+      labels:["W1","W2","W3","W4"],
+      datasets:[
+        {
+          label:t("manualTime"),
+          data:[5,4.8,5.2,5],
+          borderColor:"#ff7186",
+          backgroundColor:"#ff718622",
+          tension:.35,
+          borderWidth:3,
+          pointRadius:5
+        },
+        {
+          label:t("platformTime"),
+          data:[1.2,1,0.9,0.7],
+          borderColor:"#458aff",
+          backgroundColor:"#458aff20",
+          fill:true,
+          tension:.35,
+          borderWidth:3,
+          pointRadius:5
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{position:"bottom"},
+        tooltip:{mode:"index",intersect:false}
+      },
+      scales:{
+        x:{grid:{color:"#24334a"}},
+        y:{beginAtZero:true,grid:{color:"#24334a"}}
+      }
+    }
+  });
+
+  state.chart2=new Chart(doughnutCanvas,{
+    type:"doughnut",
+    data:{
+      labels:[t("security"),t("accuracy"),t("transparency")],
+      datasets:[{
+        data:[40,35,25],
+        backgroundColor:["#36d6a1","#458aff","#ad83ff"],
+        borderColor:"#111b30",
+        borderWidth:4,
+        hoverOffset:8
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      cutout:"68%",
+      plugins:{legend:{position:"bottom"}}
+    }
+  });
+}
+
+/* =====================================
+   GOVERNANCE ENGINE
+   ===================================== */
+
+function modelStatus(model){
+  return model.score>=85?"ready":"review";
+}
+
+function renderModels(){
+  const search=document.getElementById("modelSearch")
+    .value.trim().toLowerCase();
+
+  const filter=document.getElementById("modelFilter").value;
+  const tbody=document.getElementById("modelsTable");
+
+  const filtered=demoModels.filter(function(model){
+    const text=(model.name+" "+t(model.use)).toLowerCase();
+    const matchesSearch=text.includes(search);
+    const matchesFilter=
+      filter==="all" || modelStatus(model)===filter;
+    return matchesSearch && matchesFilter;
+  });
+
+  if(!filtered.length){
+    tbody.innerHTML=
+      '<tr><td colspan="6" class="empty">'+
+      escapeHTML(t("noResults"))+
+      '</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=filtered.map(function(model){
+    const ready=modelStatus(model)==="ready";
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHTML(model.name)}</strong>
+          <div style="font-size:10px;color:#8396b5">
+            ${escapeHTML(t("demoOnly"))}
+          </div>
+        </td>
+        <td>${escapeHTML(t(model.use))}</td>
+        <td>${model.accuracy}%</td>
+        <td>${model.latency} ms</td>
+        <td>
+          <strong>${model.score}/100</strong>
+          <div class="progress" style="width:100px;margin-top:7px">
+            <div style="width:${model.score}%"></div>
+          </div>
+        </td>
+        <td>
+          <span class="tag ${ready?"tag-green":"tag-amber"}">
+            ${escapeHTML(t(ready?"filterReady":"filterReview"))}
+          </span>
+        </td>
+      </tr>`;
+  }).join("");
+}
+
+function runAudit(){
+  state.auditCount++;
+
+  state.lastAudit={
+    date:new Date().toISOString(),
+    score:averageScore(),
+    models:demoModels.length
+  };
+
+  addLog("auditOperation",{
+    score:state.lastAudit.score,
+    models:state.lastAudit.models
+  });
+
+  updateDashboard();
+  renderAuditResult();
+  showToast(t("auditComplete"));
+}
+
+function renderAuditResult(){
+  const box=document.getElementById("auditResult");
+
+  if(!state.lastAudit){
+    box.textContent=t("noAudit");
+    return;
+  }
+
+  const result=state.lastAudit;
+
+  box.textContent=
+    "✓ "+t("auditComplete")+"\n"+
+    t("auditSummary")+": "+result.score+"/100\n"+
+    t("kpiModels")+": "+result.models+"\n"+
+    formatDate(result.date)+"\n\n"+
+    t("auditNote");
+}
+
+/* =====================================
+   LOCAL KNOWLEDGE ASSISTANT
+   ===================================== */
+
+function getAnswerKey(query){
+  const q=query.toLowerCase();
+
+  if(/rag|استرجاع|retrieval/.test(q))
+    return "answerRag";
+
+  if(/خصوص|بيانات|privacy|data protection|personal data/.test(q))
+    return "answerPrivacy";
+
+  if(/2031|استراتيجي|strategy|uae ai/.test(q))
+    return "answerStrategy";
+
+  if(/حوكم|شفافي|مساءل|governance|accountability|fairness|security/.test(q))
+    return "answerGovernance";
+
+  return "fallback";
+}
+
+function renderChat(){
+  const box=document.getElementById("chatMessages");
+  box.replaceChildren();
+
+  const messages=[
+    {role:"assistant",key:"welcome"},
+    ...state.chat
+  ];
+
+  messages.forEach(function(message){
+    const wrapper=document.createElement("div");
+    wrapper.className="message "+(message.role==="user"?"user":"assistant");
+
+    if(message.role==="assistant"){
+      const avatar=document.createElement("div");
+      avatar.className="avatar";
+      avatar.textContent="AI";
+      wrapper.appendChild(avatar);
+    }
+
+    const bubble=document.createElement("div");
+    bubble.className="bubble";
+    bubble.textContent=message.key?t(message.key):message.text;
+    wrapper.appendChild(bubble);
+    box.appendChild(wrapper);
+  });
+
+  box.scrollTop=box.scrollHeight;
+}
+
+function addQuestion(question){
+  const clean=question.trim();
+  if(!clean) return;
+
+  state.chat.push({role:"user",text:clean});
+  state.chat.push({
+    role:"assistant",
+    key:getAnswerKey(clean)
+  });
+
+  if(state.chat.length>60){
+    state.chat=state.chat.slice(-60);
+  }
+
+  renderChat();
+}
+
+function sendMessage(event){
+  event.preventDefault();
+
+  const input=document.getElementById("chatInput");
+  const question=input.value.trim();
+
+  if(!question) return;
+
+  addQuestion(question);
+  input.value="";
+  input.focus();
+}
+
+function askQuick(type){
+  const questions={
+    strategy:{
+      ar:"ما هي استراتيجية الإمارات للذكاء الاصطناعي 2031؟",
+      en:"What is the UAE AI Strategy 2031?"
+    },
+    privacy:{
+      ar:"كيف نحمي خصوصية البيانات؟",
+      en:"How can we protect data privacy?"
+    },
+    governance:{
+      ar:"ما هي حوكمة الذكاء الاصطناعي؟",
+      en:"What is AI governance?"
+    },
+    rag:{
+      ar:"كيف تعمل تقنية RAG؟",
+      en:"How does RAG work?"
+    }
+  };
+
+  if(questions[type]){
+    addQuestion(questions[type][state.lang]);
+  }
+}
+
+function clearChat(){
+  state.chat=[];
+  renderChat();
+  showToast(t("chatCleared"));
+}
+
+/* =====================================
+   POLICY LIBRARY
+   ===================================== */
+
+function renderPolicies(){
+  const query=document.getElementById("policySearch")
+    .value.trim().toLowerCase();
+
+  const grid=document.getElementById("policyGrid");
+
+  const filtered=policies.filter(function(policy){
+    const text=(t(policy.title)+" "+t(policy.desc)).toLowerCase();
+    return text.includes(query);
+  });
+
+  if(!filtered.length){
+    grid.innerHTML='<div class="empty">'+
+      escapeHTML(t("noResults"))+'</div>';
+    return;
+  }
+
+  grid.replaceChildren();
+
+  filtered.forEach(function(policy){
+    const card=document.createElement("article");
+    card.className="policy-card";
+
+    const tag=document.createElement("span");
+    tag.className="tag tag-blue";
+    tag.textContent=t(policy.type);
+
+    const title=document.createElement("h4");
+    title.textContent=t(policy.title);
+
+    const description=document.createElement("p");
+    description.textContent=t(policy.desc);
+
+    card.append(tag,title,description);
+
+    if(policy.url){
+      const link=document.createElement("a");
+      link.href=policy.url;
+      link.target="_blank";
+      link.rel="noopener noreferrer";
+      link.textContent=t("openReference")+" ↗";
+      card.appendChild(link);
+    }
+
+    grid.appendChild(card);
+  });
+}
+
+/* =====================================
+   SANDBOX SIMULATION
+   ===================================== */
+
+function renderSandboxDefault(){
+  const box=document.getElementById("sandboxResult");
+  if(!box.dataset.hasResult){
+    box.textContent=t("sandboxDefault");
+  }else{
+    renderSandboxResult();
+  }
+}
+
+let lastSandbox=null;
+
+function runSandbox(){
+  const prompt=document.getElementById("sandboxPrompt").value.trim();
+  const scenario=document.getElementById("sandboxScenario").value;
+  const temperature=Number(document.getElementById("temperature").value);
+
+  if(!prompt){
+    document.getElementById("sandboxPrompt").focus();
+    return;
+  }
+
+  // Educational heuristic, not a real model test.
+  let risk="lowRisk";
+
+  if(scenario==="privacy" || scenario==="security"){
+    risk="mediumRisk";
+  }
+
+  if(/password|secret|كلمة مرور|بيانات سرية/i.test(prompt)){
+    risk="highRisk";
+  }
+
+  lastSandbox={
+    scenario,
+    temperature,
+    risk,
+    date:new Date().toISOString()
+  };
+
+  document.getElementById("sandboxResult").dataset.hasResult="true";
+
+  addLog("simulationOperation",{
+    scenario,
+    temperature,
+    risk
+  });
+
+  renderSandboxResult();
+  showToast(t("simulationDone"));
+}
+
+function renderSandboxResult(){
+  if(!lastSandbox) return;
+
+  const scenarioKey={
+    general:"scenarioGeneral",
+    privacy:"scenarioPrivacy",
+    security:"scenarioSecurity",
+    policy:"scenarioPolicy"
+  }[lastSandbox.scenario];
+
+  const style=lastSandbox.temperature<=0.5
+    ?"stableResponse":"creativeResponse";
+
+  const box=document.getElementById("sandboxResult");
+
+  box.textContent=
+    "✓ "+t("simulationDone")+"\n\n"+
+    t("scenarioResult")+": "+t(scenarioKey)+"\n"+
+    t("temperatureResult")+": "+lastSandbox.temperature+"\n"+
+    t("responseStyle")+": "+t(style)+"\n"+
+    t("riskLevel")+": "+t(lastSandbox.risk)+"\n\n"+
+    t("simulationWarning");
+}
+
+/* =====================================
+   REPORTING SYSTEM
+   ===================================== */
+
+function addLog(type,details){
+  state.logs.push({
+    type,
+    details,
+    date:new Date().toISOString()
+  });
+
+  state.logs=state.logs.slice(-100);
+  saveState();
+  renderReports();
+}
+
+function logDetails(log){
+  if(log.type==="auditOperation"){
+    return t("auditSummary")+": "+
+      log.details.score+"/100 • "+
+      t("kpiModels")+": "+log.details.models;
+  }
+
+  if(log.type==="simulationOperation"){
+    const scenarioKey={
+      general:"scenarioGeneral",
+      privacy:"scenarioPrivacy",
+      security:"scenarioSecurity",
+      policy:"scenarioPolicy"
+    }[log.details.scenario] || "scenarioGeneral";
+
+    return t(scenarioKey)+" • "+
+      t("temperatureResult")+": "+
+      log.details.temperature;
+  }
+
+  return "—";
+}
+
+function renderReports(){
+  const audits=state.logs.filter(x=>x.type==="auditOperation").length;
+  const simulations=state.logs.filter(x=>x.type==="simulationOperation").length;
+
+  document.getElementById("reportAuditCount").textContent=audits;
+  document.getElementById("reportSimulationCount").textContent=simulations;
+  document.getElementById("reportTotalCount").textContent=state.logs.length;
+
+  const tbody=document.getElementById("reportsTable");
+
+  if(!state.logs.length){
+    tbody.innerHTML='<tr><td colspan="3" class="empty">'+
+      escapeHTML(t("noReports"))+'</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML=[...state.logs].reverse().map(function(log){
+    return `
+      <tr>
+        <td>${escapeHTML(formatDate(log.date))}</td>
+        <td>${escapeHTML(t(log.type))}</td>
+        <td>${escapeHTML(logDetails(log))}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function clearReports(){
+  if(!window.confirm(t("clearConfirm"))) return;
+
+  state.logs=[];
+  state.auditCount=0;
+  state.lastAudit=null;
+
+  saveState();
+  renderReports();
+  renderAuditResult();
+  updateDashboard();
+  showToast(t("cleared"));
+}
+
+function exportReport(){
+  const report={
+    application:"GovAI Enterprise",
+    prototype:true,
+    generatedAt:new Date().toISOString(),
+    disclaimer:"Illustrative local simulation only",
+    models:demoModels,
+    activity:state.logs
+  };
+
+  const blob=new Blob(
+    [JSON.stringify(report,null,2)],
+    {type:"application/json;charset=utf-8"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download="GovAI-Report.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast(t("exported"));
+}
+
+/* =====================================
+   NOTIFICATIONS
+   ===================================== */
+
+let toastTimer=null;
+
+function showToast(message){
+  const old=document.querySelector(".toast");
+  if(old) old.remove();
+  if(toastTimer) clearTimeout(toastTimer);
+
+  const toast=document.createElement("div");
+  toast.className="toast";
+  toast.setAttribute("role","status");
+  toast.textContent=message;
+  document.body.appendChild(toast);
+
+  toastTimer=setTimeout(()=>{
+    toast.remove();
+    toastTimer=null;
+  },3000);
+}
+
+/* =====================================
+   APPLICATION STARTUP
+   ===================================== */
+
+function initialize(){
+  document.getElementById("sandboxPrompt").value=
+    t("defaultPrompt");
+
+  document.addEventListener("keydown",function(event){
+    if(event.key==="Escape") closeMenu();
+  });
+
+  applyLanguage();
+  navigate("dashboard");
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",initialize);
+}else{
+  initialize();
+}
+</script>
+</body>
+</html>
